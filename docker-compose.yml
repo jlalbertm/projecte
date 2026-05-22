@@ -1,0 +1,50 @@
+#version: '2'
+networks:
+  mynetwork:
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - ./datos:/var/lib/mysql
+    env_file:
+      - ./config/db.env
+    networks:
+      mynetwork:
+        ipv4_address: 172.21.0.2
+
+  myapp:
+    image: docker.io/bitnamilegacy/laravel:12
+    ports:
+      - '8010:8000'
+      - '5173:5173'
+    env_file:
+      - ./config/laravel.env      
+    volumes:
+      - './projecte:/app' 
+    depends_on:
+      - db
+    networks:
+      mynetwork:
+        ipv4_address: 172.21.0.3
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - 8005:80
+    env_file:
+      - ./config/php.env
+
+    depends_on:
+      - db
+    networks:
+      mynetwork:
+        ipv4_address: 172.21.0.4
+
+
