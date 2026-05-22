@@ -1,4 +1,5 @@
 <?php
+/*modul per gestionar els cicles formatius, permet crear, editar, mostrar i eliminar un cicle formatiu*/
 
 namespace App\Http\Controllers;
 
@@ -13,6 +14,8 @@ class CicloFormativoController extends Controller
      */
     public function index()
     {
+
+
         $ciclosFormativos = CicloFormativo::orderBy('nombre')->paginate(5);
         return view('ciclosFormativos.index', compact('ciclosFormativos'));
 
