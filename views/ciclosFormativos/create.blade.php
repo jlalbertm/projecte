@@ -1,3 +1,7 @@
+<!-- En aquesta vista mostrarem el formulari per crear un nou cicle formatiu
+    este modul es basa en el de editar pero en aquest cas no tenim dades a mostrar,
+
+-->
 
 @extends('template')
 @section('title','Formulari nou Cicle formatiu')
@@ -14,6 +18,7 @@
     --}}
     <form action="{{route('ciclosFormativos.store')}}" method="POST">
         @csrf
+        <!-- creació del nom-->
         <div class="form-group">
             <label for="title">Nom del cicle formatiu:</label>
             <input type="text" class="form-control" name="nombre" id="nombre" value="{{ old('nombre')}}">
@@ -23,6 +28,7 @@
             @endif
 
         </div>
+        <!-- creació de la família professional a la qual pertany el cicle formatiu-->
         <div class="form-group">
             <label for="editorial">Família professional a la qual pertany:</label>
 
@@ -32,6 +38,8 @@
             @endif
 
         </div>
+
+        <!-- creació del grau, per evitar error affegim un select entre les 2 opcions que tenim -->
         <div class="form-group">
             <label for="price">Grau:</label>
             <select class="form-control" name="grado" id="grado">
@@ -45,6 +53,7 @@
 
 
         </div>
+        <!-- creació de la modalitat, per evitar error affegim un select entre les 2 opcions que tenim -->
         <div class="form-group">
             <label for="author">Modalitat:</label>
            <select class="form-control" name="modalidad" id="modalidad">
@@ -57,6 +66,7 @@
                 <div class="text-danger">{{$errors->first('modalidad')}}</div>
             @endif
         </div>
+        <!-- creació de la Referència normativa del títol , per evitar error affegim un select entre les 2 opcions que tenim -->
         <div class="form-group">
             <label for="title">Referència normativa del títol (BOE/DOGV):</label>
             <input type="text" class="form-control" name="decreto_referencia" id="decreto_referencia" value="{{ old('decreto_referencia')}}">
@@ -67,7 +77,8 @@
 
         </div>
 
-
+        <!-- creació del actiu, per evitar error affegim un select entre les 2 opcions que tenim,
+            es mostra sí o no pero es guarda 1 o 0 al tindre un boolean a les taules -->
         <div class="form-group">
             <label for="author">Actiu:</label>
            <select class="form-control" name="activo" id="activo">
