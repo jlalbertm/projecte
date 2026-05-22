@@ -77,4 +77,354 @@ composer require laravel/ui
 php artisan ui bootstrap 
 npm install sass --save-dev   
 ```
-una vegada ja tenim preparat el laravel, ja podem treballar amb els moduls que anem a crear
+una vegada ja tenim preparat el laravel, ja podem treballar amb els moduls que anem a crear.
+
+**Controladors**
+
+El controlador nes ajuda a fer les funcions sobre els moduls
+
+```
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\CicloFormativo;
+use Illuminate\Http\Request;
+
+
+class CicloFormativoController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $ciclosFormativos = CicloFormativo::orderBy('nombre')->paginate(5);
+        return view('ciclosFormativos.index', compact('ciclosFormativos'));
+
+
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('ciclosFormativos.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        request()->validate(
+            [
+                'nombre' => 'required|min:3|max:150',
+                'familia_profesional' => 'required|min:3|max:100',
+                'grado' => 'required',
+                'modalidad' => 'required',
+                'decreto_referencia' => 'required|min:3|max:250',
+                'activo' => 'required'
+            ]
+            );
+
+        $ciclosFormativo = new CicloFormativo();
+        $ciclosFormativo->nombre= $request->get('nombre');
+        $ciclosFormativo->familia_profesional= $request->get('familia_profesional');
+        $ciclosFormativo->grado= $request->get('grado');
+        $ciclosFormativo->modalidad= $request->get('modalidad');
+        $ciclosFormativo->decreto_referencia= $request->get('decreto_referencia');
+        $ciclosFormativo->activo= $request->get('activo');
+        $ciclosFormativo->save();
+        return redirect()->route('ciclosFormativos.index');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(CicloFormativo $ciclosFormativo)
+    {
+        $CiclosFormativo = $ciclosFormativo;
+        return view('ciclosFormativos.show', compact('CiclosFormativo'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(CicloFormativo $ciclosFormativo)
+    {
+        $CiclosFormativo = $ciclosFormativo;
+        return view('ciclosFormativos.edit', compact('CiclosFormativo'));
+
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, CicloFormativo $ciclosFormativo)
+    {
+        $ciclosFormativo->nombre= $request->get('nombre');
+        $ciclosFormativo->familia_profesional= $request->get('familia_profesional');
+        $ciclosFormativo->grado= $request->get('grado');
+        $ciclosFormativo->modalidad= $request->get('modalidad');
+        $ciclosFormativo->decreto_referencia= $request->get('decreto_referencia');
+        $ciclosFormativo->activo= $request->get('activo');
+        $ciclosFormativo->save();
+        return redirect()->route('ciclosFormativos.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(CicloFormativo $ciclosFormativo)
+    {
+        $ciclosFormativo->delete();
+        return redirect()->route('ciclosFormativos.index');
+    }
+
+}
+
+```
+
+**vistes**
+les vistes principals son:
+**index**
+```
+
+@extends('template')
+@section('title','Llista de Cicles Formatius')
+@section('content')
+    <h1>Cicles formatius</h1>
+    <ul>
+        @forelse($ciclosFormativos as $CiclosFormativo)
+            <li><a href="{{ route('ciclosFormativos.show',$CiclosFormativo)}}">{{$CiclosFormativo->nombre}}
+
+            </a>
+            <form action="{{ route('ciclosFormativos.destroy',$CiclosFormativo)}}" method="POST">
+                @method('DELETE')
+                @csrf
+                <button type="submit" class="btn btn-danger">Borrar</button>
+            </form>
+
+            <!--<form action="{{ route('ciclosFormativos.edit', $CiclosFormativo) }}">
+                @csrf
+                <button type="submit" class="btn btn-warning">Editar</button>
+            </form>-->
+            <a href="{{ route('ciclosFormativos.edit', $CiclosFormativo) }}" class="btn btn-warning">Editar</a>
+
+            </li>
+        @empty
+                <li>No hi han cicles formatius que mostrar</li>
+        @endforelse
+    </ul>
+    {{$ciclosFormativos->links()}}
+@endsection
+
+```
+
+**create**
+```
+
+@extends('template')
+@section('title','Formulari nou Cicle formatiu')
+@section('content')
+    <h1>Crear cicle formatiu</h1>
+    {{--
+    @if ($errors->any())
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    @endif
+    --}}
+    <form action="{{route('ciclosFormativos.store')}}" method="POST">
+        @csrf
+        <div class="form-group">
+            <label for="title">Nom del cicle formatiu:</label>
+            <input type="text" class="form-control" name="nombre" id="nombre" value="{{ old('nombre')}}">
+
+            @if($errors->has('nombre'))
+                <div class="text-danger">{{$errors->first('nombre')}}</div>
+            @endif
+
+        </div>
+        <div class="form-group">
+            <label for="editorial">Família professional a la qual pertany:</label>
+
+            <input type="text" class="form-control" name="familia_profesional" id="familia_profesional" value="{{ old('familia_profesional')}}">
+                @if($errors->has('familia_profesional'))
+                <div class="text-danger">{{$errors->first('familia_profesional')}}</div>
+            @endif
+
+        </div>
+        <div class="form-group">
+            <label for="price">Grau:</label>
+            <select class="form-control" name="grado" id="grado">
+                <option value="Grau Mitjà" {{ old('grado') == 'Grau Mitjà' ? 'selected' : '' }}>Grau Mitjà</option>
+                <option value="Grau Superior" {{ old('grado') == 'Grau Superior' ? 'selected' : '' }}>Grau Superior</option>
+            </select>
+
+            @if($errors->has('grado'))
+                <div class="text-danger">{{$errors->first('grado')}}</div>
+            @endif
+
+
+        </div>
+        <div class="form-group">
+            <label for="author">Modalitat:</label>
+           <select class="form-control" name="modalidad" id="modalidad">
+                <option value="Presencial" {{ old('modalidad') == 'Presencial' ? 'selected' : '' }}>Presencial</option>
+                <option value="Semipresencial" {{ old('modalidad') == 'Semipresencial' ? 'selected' : '' }}>Semipresencial</option>
+
+            </select>
+
+            @if($errors->has('modalidad'))
+                <div class="text-danger">{{$errors->first('modalidad')}}</div>
+            @endif
+        </div>
+        <div class="form-group">
+            <label for="title">Referència normativa del títol (BOE/DOGV):</label>
+            <input type="text" class="form-control" name="decreto_referencia" id="decreto_referencia" value="{{ old('decreto_referencia')}}">
+
+            @if($errors->has('decreto_referencia'))
+                <div class="text-danger">{{$errors->first('decreto_referencia')}}</div>
+            @endif
+
+        </div>
+
+
+        <div class="form-group">
+            <label for="author">Actiu:</label>
+           <select class="form-control" name="activo" id="activo">
+                <option value="1" {{ old('activo') === '1' ? 'selected' : '' }}>SÍ</option>
+                <option value="0" {{ old('activo') === '0' ? 'selected' : '' }}>NO</option>
+            </select>
+            @if($errors->has('activo'))
+                <div class="text-danger">{{$errors->first('activo')}}</div>
+            @endif
+        </div>
+        <input type="submit" name="Crear" value="Crear" class="btn btn-success btn-block">
+
+    </form>
+@endsection
+
+```
+
+**show**
+```
+
+
+@extends('template')
+@section('title','Dades del cicle formatiu')
+@section('content')
+    <h1>Nom del cicle formatiu: {{$CiclosFormativo->nombre}}</h1>
+    <p>Família professional a la qual pertany: {{$CiclosFormativo->familia_profesional}}</p>
+    <p>Grau: {{$CiclosFormativo->grado}}</p>
+    <p>Modalitat: {{$CiclosFormativo->modalidad}}</p>
+    <p>Referència normativa del títol (BOE/DOGV): {{$CiclosFormativo->decreto_referencia}}</p>
+    <p>Actiu: {{ $CiclosFormativo->activo ? 'SÍ' : 'NO' }}</p>
+
+@endsection
+
+```
+**edit**
+```
+
+@extends('template')
+@section('title','Formulari editar Cicle formatiu')
+@section('content')
+    <h1>Editar Cicle Formatiu</h1>
+    <form action="{{route('ciclosFormativos.update', $CiclosFormativo)}}" method="POST">
+
+        @method('PUT')
+        @csrf
+        <div class="form-group">
+            <label for="nombre">Nom del cicle formatiu:</label>
+            <input type="text" class="form-control" name="nombre" id="nombre" value="{{$CiclosFormativo->nombre}}">
+        </div>
+        <div class="form-group">
+            <label for="familia_profesional">Família professional a la qual pertany:</label>
+            <input type="text" class="form-control" name="familia_profesional" id="familia_profesional" value="{{$CiclosFormativo->familia_profesional}}">
+        </div>
+        <div class="form-group">
+            <label for="price">Grau:</label>
+            <select class="form-control" name="grado" id="grado">
+                <option value="Grau Mitjà" {{ old('grado', $CiclosFormativo->grado) == 'Grau Mitjà' ? 'selected' : '' }}>Grau Mitjà</option>
+                <option value="Grau Superior" {{ old('grado', $CiclosFormativo->grado) == 'Grau Superior' ? 'selected' : '' }}>Grau Superior</option>
+            </select>
+
+        </div>
+        <div class="form-group">
+            <label for="author">Modalitat:</label>
+            <select class="form-control" name="modalidad" id="modalidad">
+                <option value="Presencial" {{ old('modalidad', $CiclosFormativo->modalidad) == 'Presencial' ? 'selected' : '' }}>Presencial</option>
+                <option value="Semipresencial" {{ old('modalidad', $CiclosFormativo->modalidad) == 'Semipresencial' ? 'selected' : '' }}>Semipresencial</option>
+
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="decreto_referencia">Referència normativa del títol (BOE/DOGV):</label>
+            <input type="text" class="form-control" name="decreto_referencia" id="decreto_referencia" value="{{$CiclosFormativo->decreto_referencia}}">
+        </div>
+        <div class="form-group">
+            <label for="decreto_referencia">Actiu:</label>
+            <select class="form-control" name="activo" id="activo">
+                <option value="1" {{ old('activo', $CiclosFormativo->activo) == 1 ? 'selected' : '' }}>SÍ</option>
+                <option value="0" {{ old('activo', $CiclosFormativo->activo) == 0 ? 'selected' : '' }}>NO</option>
+            </select>
+
+        </div>
+        <input type="submit" name="Editar" value="Editar" class="btn btn-warning btn-block">
+
+    </form>
+@endsection
+
+```
+
+per al correcte funcionament del programa sobre web.php tenim:
+```
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CicloFormativoController;
+use App\Http\Controllers\ProgramacionDidatcticaController;
+
+
+Route::get('/', [CicloFormativoController::class, 'index']);
+
+
+Route::resource('ciclosFormativos', CicloFormativoController::class);
+```
+
+com a barra de navegació en totes les pàgines:
+```
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<a class="navbar-brand" href="#">Cicles Formatius</a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" datatarget="#navbarNav" aria-controls="navbarNav" aria-expanded="false" arialabel="Toggle navigation">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNav">
+<ul class="navbar-nav">
+
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('ciclosFormativos.index') }}">Llistar Cicles formatius</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ route('ciclosFormativos.create') }}">Crear Cicles formatius</a>
+</li>
+
+</ul>
+</div>
+</nav>
+```
+Per personatlar l'error 404
+```
+@extends('template')
+@section('title','Error 404')
+@section('content')
+    <h1 style="color:tomato;">ERROR 404</h1>
+    <p>Pàgina no trobada</p>
+@endsection
+```
