@@ -567,3 +567,37 @@ class CiclesFormatius extends Seeder
 }
 
 ```
+
+ara ja podríem cridar al seeder
+```
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\User;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        // User::factory(10)->create();
+
+        $this->call(CiclesFormatius::class);
+
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
+    }
+}
+```
+
+i ho farem amb:
+```
+php artisan migrate:fresh --seed
+```
