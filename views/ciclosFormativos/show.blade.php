@@ -16,5 +16,5 @@
                 @csrf
                 <button type="submit" class="btn btn-danger">Borrar</button>
             </form>
-
+            <a href="{{ route('ciclosFormativos.edit', $CiclosFormativo) }}" class="btn btn-warning">Editar</a>
 @endsection
