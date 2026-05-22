@@ -11,9 +11,13 @@ docker exec -it laravel-myapp-1 bash
 i llançarem :
 ```
 php artisan make:migration create_ciclos_formativos
+
+```
+si volem fer també la taula de programaciones didácticas ho fariem així, pero a aquest projecte no ho gastarem
+
+```
 php artisan make:migration create_programaciones_didacticas
 ```
-
 i procedirem a preparar quins camps deu crear en la migració
 
 ```
@@ -27,7 +31,9 @@ Schema::create('ciclos_formativos', function (Blueprint $table) {
             $table->boolean('activo');
             $table->timestamps();
         });
-
+```
+i per les programacions didactiques:
+```
 Schema::create('programaciones_didacticas', function (Blueprint $table) {
             $table->id();
             $table->string('titulo',100);
@@ -71,3 +77,4 @@ composer require laravel/ui
 php artisan ui bootstrap 
 npm install sass --save-dev   
 ```
+una vegada ja tenim preparat el laravel, ja podem treballar amb els moduls que anem a crear
