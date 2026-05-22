@@ -188,7 +188,9 @@ class CicloFormativoController extends Controller
 ```
 
 **vistes**
+
 les vistes principals son:
+
 **index**
 ```
 
@@ -427,4 +429,23 @@ Per personatlar l'error 404
     <h1 style="color:tomato;">ERROR 404</h1>
     <p>Pàgina no trobada</p>
 @endsection
+```
+
+l'estil de la web el tenim en app.scss
+```
+// Fonts
+@import url('https://fonts.bunny.net/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+body
+{
+    font-family: var(--font-sans);
+    background-color: #f8f9fa;
+    text-align: justify;
+}
 ```
