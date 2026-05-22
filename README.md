@@ -442,10 +442,14 @@ l'estil de la web el tenim en app.scss
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
+/*
+configuraremels estils que volem aplicar a la nostra web
+*/
 body
 {
     font-family: var(--font-sans);
     background-color: #f8f9fa;
     text-align: justify;
 }
+
 ```
