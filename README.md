@@ -316,7 +316,7 @@ les vistes principals son:
 
 **show**
 ```
-
+/*En aquesta vista mostrarem les dades del cicle formatiu que hem seleccionat a la vista index*/
 
 @extends('template')
 @section('title','Dades del cicle formatiu')
@@ -329,6 +329,7 @@ les vistes principals son:
     <p>Actiu: {{ $CiclosFormativo->activo ? 'SÍ' : 'NO' }}</p>
 
 @endsection
+
 
 ```
 **edit**
