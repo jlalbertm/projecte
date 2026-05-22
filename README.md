@@ -333,7 +333,9 @@ les vistes principals son:
 ```
 **edit**
 ```
-
+/*
+Modul poer poder editar les dades d'un cicle.
+*/
 @extends('template')
 @section('title','Formulari editar Cicle formatiu')
 @section('content')
@@ -342,14 +344,17 @@ les vistes principals son:
 
         @method('PUT')
         @csrf
+        /*Nom del cicle formatiu*/
         <div class="form-group">
             <label for="nombre">Nom del cicle formatiu:</label>
             <input type="text" class="form-control" name="nombre" id="nombre" value="{{$CiclosFormativo->nombre}}">
         </div>
+        /*Família professional a la qual pertany*/
         <div class="form-group">
             <label for="familia_profesional">Família professional a la qual pertany:</label>
             <input type="text" class="form-control" name="familia_profesional" id="familia_profesional" value="{{$CiclosFormativo->familia_profesional}}">
         </div>
+        /*Grau, per evitar error affegim un select entre les 2 opcions que tenim*/
         <div class="form-group">
             <label for="price">Grau:</label>
             <select class="form-control" name="grado" id="grado">
@@ -358,6 +363,7 @@ les vistes principals son:
             </select>
 
         </div>
+        /*Modaliat, per evitar error affegim un select entre les 2 opcions que tenim*/
         <div class="form-group">
             <label for="author">Modalitat:</label>
             <select class="form-control" name="modalidad" id="modalidad">
@@ -366,10 +372,12 @@ les vistes principals son:
 
             </select>
         </div>
+        /*Referència normativa del títol */
         <div class="form-group">
             <label for="decreto_referencia">Referència normativa del títol (BOE/DOGV):</label>
             <input type="text" class="form-control" name="decreto_referencia" id="decreto_referencia" value="{{$CiclosFormativo->decreto_referencia}}">
         </div>
+        /*Actiu, este select encara que mostra un SI o No, al tindre un boolean a les taules guardem 1 o 0*/
         <div class="form-group">
             <label for="decreto_referencia">Actiu:</label>
             <select class="form-control" name="activo" id="activo">
@@ -382,6 +390,7 @@ les vistes principals son:
 
     </form>
 @endsection
+
 
 ```
 
