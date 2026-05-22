@@ -1,4 +1,4 @@
-
+/*En aquesta vista mostrarem les dades del cicle formatiu que hem seleccionat a la vista index*/
 
 @extends('template')
 @section('title','Dades del cicle formatiu')
